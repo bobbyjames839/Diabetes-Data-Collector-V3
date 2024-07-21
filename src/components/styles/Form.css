@@ -1,0 +1,17 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.submit_data_button {
+  margin-top: 20px;
+  padding: 3px 50px;
+  border: 2px solid var(--blue);
+  border-radius: 5px;
+  background-color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+

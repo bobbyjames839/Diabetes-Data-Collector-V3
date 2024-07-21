@@ -1,13 +1,18 @@
-import { Questions } from './components/sections/Questions';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Form } from './components/Pages/Form';
+import { Main } from './components/Pages/Main';
 import './components/styles/App.css'
 
 function App() {
 
     return (
         <div className='App'>
-            <h1 className="title">Input your data below</h1>
-            <span className="divider"></span>
-            <Questions/>
+            <Router>
+                <Routes>
+                <Route path = '/' element = {<Main/>}/>
+                <Route path = '/form' element = {<Form/>}/>
+                </Routes>
+            </Router>
         </div>
     );
 }

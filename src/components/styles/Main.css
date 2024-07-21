@@ -1,0 +1,28 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.main h3 {
+  font-size: 60px;
+}
+
+.access_service_buttons {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.access_service_button {
+  width: 200px;
+  height: 30px;
+  background-color: white;
+  border: 2px solid var(--green);
+  border-radius: 5px;
+  margin: 0 10px;
+  font-size: 13px;
+  cursor: pointer;
+}

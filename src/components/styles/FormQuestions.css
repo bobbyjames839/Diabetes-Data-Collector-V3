@@ -1,0 +1,45 @@
+.form_second_half {
+  width: 80%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form_second_half_title {
+  margin: 70px 0 50px 0;
+}
+
+.form_question {
+  width: 80%;
+  margin-bottom: 30px;
+}
+
+.form_question_title {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.form_question_input {
+  width: 100%;
+  padding: 5px;
+  font-size: 14px;
+  border: none;
+  border-bottom: 1px solid rgb(90, 90, 90);
+  background-color: rgb(248, 248, 248);
+}
+
+.form_question_input:focus {
+  outline: none;
+}
+
+.form_question_inner {
+  display: flex;
+  align-items: center;
+}
+
+.question_info_button {
+  font-size: 14px;
+  margin-left: 10px;
+  
+}

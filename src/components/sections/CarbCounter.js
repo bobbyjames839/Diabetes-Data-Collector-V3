@@ -1,8 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import '../styles/CarbCounter.css';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-export const CarbCounter = ({ setCarbsEatenNumerical }) => {
+export const CarbCounter = ({ setCarbsEatenNumerical, setFirstHalf }) => {
   const [productName, setProductName] = useState('');
   const [products, setProducts] = useState([]);
   const [displayedProducts, setDisplayedProducts] = useState([]);
@@ -11,28 +14,23 @@ export const CarbCounter = ({ setCarbsEatenNumerical }) => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [totalCarbs, setTotalCarbs] = useState(null);
+  const [totalCarbs, setTotalCarbs] = useState(0);
   const [page, setPage] = useState(1);
-
   const isMounted = useRef(false);
 
-  // Load favorites from localStorage on mount
+  library.add(faStar);
+
   useEffect(() => {
     if (!isMounted.current) {
-      try {
-        const savedFavorites = localStorage.getItem('favorites');
-        console.log('Loaded favorites from localStorage:', savedFavorites);
-        if (savedFavorites) {
-          setFavorites(JSON.parse(savedFavorites));
-        }
-      } catch (error) {
-        console.error('Error loading favorites from localStorage:', error);
+      const savedFavorites = localStorage.getItem('favorites');
+      console.log('Loaded favorites from localStorage:', savedFavorites);
+      if (savedFavorites) {
+        setFavorites(JSON.parse(savedFavorites));
       }
       isMounted.current = true;
     }
   }, []);
 
-  // Save favorites to localStorage whenever they change
   useEffect(() => {
     try {
       console.log('Saving favorites to localStorage:', favorites);
@@ -41,6 +39,10 @@ export const CarbCounter = ({ setCarbsEatenNumerical }) => {
       console.error('Error saving favorites to localStorage:', error);
     }
   }, [favorites]);
+
+  useEffect(() => {
+    calculateTotalCarbs();
+  }, [consumedFoods]);
 
   const searchProducts = async () => {
     setLoading(true);
@@ -58,8 +60,8 @@ export const CarbCounter = ({ setCarbsEatenNumerical }) => {
         return { fullProductName, barcode };
       });
 
-      setProducts(productsData);
-      setDisplayedProducts(productsData);
+      setProducts(prevProducts => [...prevProducts, ...productsData]);
+      setDisplayedProducts(prevDisplayedProducts => [...prevDisplayedProducts, ...productsData]);
       setPage(prevPage => prevPage + 1);
     } catch (error) {
       setError('Error fetching products');
@@ -156,27 +158,22 @@ export const CarbCounter = ({ setCarbsEatenNumerical }) => {
   return (
     <div className='carb_counter'>
 
-      <div className='carb_counter_header'>
-        <h4 className='carb_counter_title'>Calculate your carbs</h4>
-        <button className='show_favourites_button' onClick={() => setShowFavorites(!showFavorites)}>
-          {showFavorites ? 'Hide Favorites' : 'Show Favorites'}
-        </button>
-      </div>
+      <h4 className='carb_counter_title'>Calculate your carbs</h4>
 
       {showFavorites ? (
-        <div className='food_list_and_consumed'>
-          <h3 className='favorites_title'>Favorites</h3>
+        <div className='food_list_outer'>
+          <h3 className='food_title'>Favorites</h3>
           <ul className='food_list'>
             {favorites.map((favorite, index) => (
-              <li className='food_item' key={index}>
+              <li className='food_list_item' key={index}>
                 <span className='food_list_name'>{favorite.customName}</span>
+
                 <div className='food_buttons'>
                   <button className='food_item_button' onClick={() => handleAddFavoriteToMeal(favorite)}>Add</button>
-                  <button className='food_item_button' onClick={() => window.open(`https://world.openfoodfacts.org/product/${favorite.barcode}`, '_blank')}>
-                    View
-                  </button>
-                  <button className='delete_favourite' onClick={() => handleDeleteFavorite(index)}>X</button>
+                  <button className='food_item_button' onClick={() => window.open(`https://world.openfoodfacts.org/product/${favorite.barcode}`, '_blank')}>View</button>
+                  <button className='food_item_button' onClick={() => handleDeleteFavorite(index)}>X</button>
                 </div>
+
               </li>
             ))}
           </ul>
@@ -185,7 +182,10 @@ export const CarbCounter = ({ setCarbsEatenNumerical }) => {
         <>
           <form className='carb_counter_searcher' onSubmit={handleSubmit}>
             <input className='carb_counter_searcher_input' type="text" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="Enter product name" />
-            <button className='search_carbs_button' type="submit">Search</button>
+            <div className='carb_counter_searcher_right'>
+              <span className='show_favourites_button' onClick={() => setShowFavorites(!showFavorites)}><FontAwesomeIcon className='star_icon' icon="star"/></span>
+              <button className='search_carbs_button' type="submit">Search</button>
+            </div>
           </form>
 
           {loading && (
@@ -196,52 +196,46 @@ export const CarbCounter = ({ setCarbsEatenNumerical }) => {
 
           {error && <p className='carbs_error'>{error}</p>}
 
-          <div className='food_list_and_consumed'>
-            {displayedProducts.length > 0 && (
-              <>
-                <ul className='food_list'>
-                  {displayedProducts.map((product, index) => (
-                    <li className='food_item' key={index}>
-                      <span className='food_list_name'>{product.fullProductName}</span>
-                      <div className='food_buttons'>
-                        <button className='food_item_button' onClick={() => handleAddToFavorites(product.barcode)}>+</button>
-                        <button className='food_item_button' onClick={() => handleProductClick(product.barcode)}>Add</button>
-                        <button className='food_item_button' onClick={() => window.open(`https://world.openfoodfacts.org/product/${product.barcode}`, '_blank')}>
-                          View
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-                {products.length < 50 && (
-                  <button className='load_more_foods' onClick={loadMoreProducts}>Load More</button>
-                )}
-              </>
-            )}
+          <div className='food_list_outer'>
+            <ul className='food_list'>
+              {displayedProducts.map((product, index) => (
+                <li className='food_list_item' key={index}>
+                  <span className='food_list_name'>{product.fullProductName}</span>
+
+                  <div className='food_buttons'>
+                    <button className='food_item_button' onClick={() => handleAddToFavorites(product.barcode)}>+</button>
+                    <button className='food_item_button' onClick={() => handleProductClick(product.barcode)}>Add</button>
+                    <button className='food_item_button' onClick={() => window.open(`https://world.openfoodfacts.org/product/${product.barcode}`, '_blank')}>View</button>
+                  </div>
+
+                </li>
+              ))}
+            </ul>
+            {products.length > 0 && products.length < 50 && (<button className='load_more_foods' onClick={loadMoreProducts}>Load More</button>)}
           </div>
         </>
       )}
 
-      <div className='food_list_and_consumed'>
+      <div className='food_list_outer'>
         {consumedFoods.length > 0 && (
           <>
-            <h3 className='my_meal_title'>My Meal</h3>
-            <ul className='my_meal_list'>
+            <h3 className='food_title'>My Meal</h3>
+            <ul className='food_list'>
               {consumedFoods.map((food, index) => (
-                <li className='my_meal_item' key={index}>
-                  <p className='food_meal_name'>{food.fullProductName}</p>
-                  <div className='my_meal_item_right'>
-                    <p className='my_meal_metric'>W: {food.weight.toFixed(1)}</p>
-                    <p className='my_meal_metric'>C: {food.carbs.toFixed(1)}</p>
-                    <button className='delete_food_item' onClick={() => handleDeleteFood(index)}>X</button>
+                <li className='food_list_item' key={index}>
+                  <p className='food_list_name'>{food.fullProductName}</p>
+                  <div className='food_buttons'>
+                    <p className='food_item_metric'>W: {food.weight.toFixed(1)}</p>
+                    <p className='food_item_metric'>C: {food.carbs.toFixed(1)}</p>
+                    <button className='food_item_button' onClick={() => handleDeleteFood(index)}>X</button>
                   </div>
                 </li>
               ))}
             </ul>
             <div className='calculate_total_carbs'>
-              <button className='calculate_total_carbs_button' onClick={calculateTotalCarbs}>Calculate Total Carbs</button>
               {totalCarbs !== null && <p className='total_carbs'>Total Carbs: {totalCarbs.toFixed(1)}g</p>}
             </div>
+            <button className='next_section' onClick={() => setFirstHalf(false)}>Next</button>
           </>
         )}
       </div>
