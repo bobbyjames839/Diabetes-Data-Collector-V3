@@ -1,0 +1,44 @@
+.predictor {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.predictor_title {
+  margin-top: 80px;
+  font-size: 50px;
+}
+
+.predictor_title_v2 {
+  font-size: 14px;
+}
+
+.predictor_inner {
+  width: 100%;
+  max-width: 2000px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px 0;
+}
+
+.predict_button {
+  padding: 8px 70px;
+  background-color: white;
+  border: 2px solid var(--blue);
+  font-size: 13px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .main h3 {
+    font-size: 40px;
+  }
+}
+
+.prediction_text {
+  font-size: 14px;
+  margin-top: 20px;
+}

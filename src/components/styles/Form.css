@@ -15,3 +15,10 @@
   cursor: pointer;
 }
 
+.home_image {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  height: 30px;
+  cursor: pointer;
+}

@@ -2,13 +2,24 @@ import { useState } from 'react';
 import '../styles/Form.css';
 import { CarbCounter } from '../sections/CarbCounter';
 import { FormQuestions } from '../sections/FormQuestions';
+import home from '../images/home.png'
+import { useNavigate } from 'react-router-dom';
 
 export const Form = () => {
   const [carbsEatenNumerical, setCarbsEatenNumerical] = useState(null)
   const [firstHalf, setFirstHalf] = useState(true)
 
-  const clearForm = () => {
-  document.getElementById('form').reset();
+  const navigate = useNavigate()
+
+  const resetForm = () => {
+    document.getElementById('insulinInjected').value = '';
+    document.getElementById('levelBefore').value = '';
+    document.getElementById('levelTwo').value = '';
+    document.getElementById('time').value = '';
+    document.getElementById('carbsTwo').value = '';
+    document.getElementById('exercisePoints').value = '';
+    document.getElementById('alcoholPoints').value = '';
+    document.getElementById('exercisePointsAfter').value = '';
   };
 
   const submitData = (carbsEatenNumerical) => {
@@ -47,12 +58,13 @@ export const Form = () => {
       console.error('Error:', error);
     });
 
-    clearForm();
+    resetForm()
   };
   
 
   return (
     <div className='form'>
+      <img className='home_image' src={home} alt='Home image' onClick={() => (navigate('/'))}/>
  
         {firstHalf ? <CarbCounter setCarbsEatenNumerical={setCarbsEatenNumerical} setFirstHalf = {setFirstHalf}/> 
         

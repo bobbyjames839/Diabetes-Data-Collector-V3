@@ -4,10 +4,18 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
+  width: 100%;
 }
 
 .main h3 {
   font-size: 60px;
+  max-width: 80%;
+  text-align: center;
+}
+
+.main p {
+  text-align: center;
+  max-width: 80%;
 }
 
 .access_service_buttons {
@@ -26,3 +34,4 @@
   font-size: 13px;
   cursor: pointer;
 }
+
