@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/CarbCounter.css';
 import { FormPopup } from './FormPopup';
 import { FavouritesOuter } from './FavouritesOuter';
@@ -18,27 +18,6 @@ export const CarbCounter = ({ setCarbsEatenNumerical, setFirstHalf }) => {
   const [totalCarbs, setTotalCarbs] = useState(0);
   const [customItemsList, setCustomItemsList] = useState([]);
   const [formPopup, setFormPopup] = useState(false)
-  const isMounted = useRef(false);
-
-  /*useEffect(() => {
-    if (!isMounted.current) {
-      const savedFavorites = localStorage.getItem('favorites');
-      console.log('Loaded favorites from localStorage:', savedFavorites);
-      if (savedFavorites) {
-        setFavorites(JSON.parse(savedFavorites));
-      }
-      isMounted.current = true;
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-      console.log('Saving favorites to localStorage:', favorites);
-      localStorage.setItem('favorites', JSON.stringify(favorites));
-    } catch (error) {
-      console.error('Error saving favorites to localStorage:', error);
-    }
-  }, [favorites]);*/
 
   useEffect(() => {
     calculateTotalCarbs();

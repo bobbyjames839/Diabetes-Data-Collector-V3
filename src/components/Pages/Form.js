@@ -64,7 +64,7 @@ export const Form = () => {
 
   return (
     <div className='form'>
-      <img className='home_image' src={home} alt='Home image' onClick={() => (navigate('/'))}/>
+      <img className='home_image' src={home} alt='Home' onClick={() => (navigate('/'))}/>
  
         {firstHalf ? <CarbCounter setCarbsEatenNumerical={setCarbsEatenNumerical} setFirstHalf = {setFirstHalf}/> 
         

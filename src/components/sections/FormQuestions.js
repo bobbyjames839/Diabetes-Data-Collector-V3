@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import '../styles/FormQuestions.css';
 
 export const FormQuestions = () => {

@@ -66,7 +66,7 @@ export const Predictor = () => {
 
   return (
     <div className="predictor">
-      <img onClick={() => navigate('/')} className="home_image" src={home} alt='Home image' />
+      <img onClick={() => navigate('/')} className="home_image" src={home} alt='Home'/>
 
       <h1 className="predictor_title">Insulin Predictor</h1>
       <p className="predictor_title_v2">Input your data below and we will use your own data to give you an insulin dosage.</p>
